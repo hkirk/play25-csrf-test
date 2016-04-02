@@ -1,0 +1,49 @@
+package controllers
+
+import javax.inject._
+
+import forms.EventForm
+import play.api._
+import play.api.i18n.{ I18nSupport, MessagesApi }
+import play.api.libs.json.{JsObject, JsString}
+import play.api.mvc._
+
+import scala.concurrent.Future
+
+/**
+ * This controller creates an `Action` to handle HTTP requests to the
+ * application's home page.
+ */
+@Singleton
+class HomeController @Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
+
+  /**
+   * Create an Action to render an HTML page with a welcome message.
+   * The configuration in the `routes` file means that this method
+   * will be called when the application receives a `GET` request with
+   * a path of `/`.
+   */
+  def index = Action {
+    Ok(views.html.index("Your new application is ready."))
+  }
+
+  def details() = Action { implicit request =>
+    Ok(views.html.details(EventForm.adminEventForm.fill(EventForm.AdminEventData(-1, ""))))
+  }
+
+  def saveDetails() = Action { implicit request =>
+    println("tags -> "+request.tags)
+    println("body -< "+request.body)
+    println("session -> "+request.session)
+    println("headers -> "+request.headers)
+
+    EventForm.adminEventForm.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.details(formWithErrors)),
+      data => {
+        Ok("Saved data")
+      }
+    )
+  }
+
+
+}

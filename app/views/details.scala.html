@@ -1,0 +1,9 @@
+@(form: Form[forms.EventForm.AdminEventData])(implicit request: RequestHeader, lang: Lang, messages: Messages)
+
+@helper.form(action = routes.HomeController.saveDetails()) {
+  @helper.CSRF.formField
+  @helper.inputText(form("id"))
+  @helper.inputText(form("name"))
+
+  <input type="submit" value="Send" />
+}
